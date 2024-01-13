@@ -14,7 +14,435 @@
 
 */
 
+/* Этот класс задает ширину контента */
+.canvas {
+  inline-size: var(--size-content_inline);
+}
+
+/* Лейаут страницы  */
 .page {
+  /* Грид в одну колонку с центральным позиционированием */
+  display: grid;
+  justify-content: center;
+  padding: 102px 0; /* Отступы сверху и снизу страницы */
+  /* Предустановленные стили задают минимальные размеры блоков */
   min-inline-size: 320px;
-  min-block-size: 100dvb;
+  min-block-size: 100dvb; /* В контексте гридов 
+  при помощи темной магии задает строке высоту, 
+  нужно учитывать при верствке отступов между секциями  */
+  font-family: var(--font-normal); /* Базовый шрифт */
+  font-variation-settings: 'wght' var(--font-weight-regular); /* На курсе отмечалось
+  как плохая практика, но в тз сказано задать вес основного шрифта именно так */
+  color: var(--color-accent_color);
+  /* Бэграунд страницы */
+  background-color: var(--color-background_color);
+  background-image: var(--background-page);
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.content {
+  /* Отступы между основным контентом и шапкой с подвалом */
+  margin-block-start: 102px;
+  margin-block-end: 54px;
+}
+
+/* 
+  Header
+*/
+
+.header {
+  /* Флекс-контейнер с контентом, прилипающим к низу */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  /* Адаптивная высота */
+  block-size: clamp(20.188rem, 19.2859rem + 3.849vw, 22.75rem);
+  /* Отступ между элементами */
+  gap: 22px;
+  /* Отступ снизу */
+  padding-block-end: 20px;
+  /* Шрифт для всего контейнера */
+  font-family: var(--font-accent);
+  /* Рамка */
+  background-color: var(--color-background_color);
+  border: 2px solid var(--color-accent_color);
+}
+
+.header__heading {
+  /* Адаптивный размер шрифта основного заголовка */
+  font-size: clamp(3.063rem, 2.7109rem + 1.5023vw, 4.063rem);
+}
+
+.header__subheading {
+  text-transform: uppercase;
+  /* Адаптивный размер шрифта подзаголовка */
+  font-size: clamp(0.875rem, 0.6768rem + 0.8458vw, 1.438rem);
+}
+
+/* 
+  Header – кнопки переключения темы
+*/
+
+/* Отступ между кнопками переключения темы */
+.theme-menu__item:not(:last-child) {
+  margin-block-end: 10px;
+}
+
+/* Кнопки переключения темы */
+.theme-menu__button {
+  /* Анимированная стрелка активной кнопки 
+  будет псевдоэлементом с абсолютным позиционированием */
+  position: relative; /* Для явного позиционирования псевдоэлементов */
+  padding-inline-start: 20px; /* Отступ для псевдоэлемента */
+  color: currentColor;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+/* Активная кнопка переключения темы */
+.theme-menu__button:disabled {
+  pointer-events: none; /* не нажимается в выбранном состоянии */
+}
+
+/* Заготовка линии для подчеркивания кнопки переключения темы */
+.theme-menu__button::after {
+  content: '';
+  display: block; /* Явно обозначаем блоком для предсказуемости поведения */
+  block-size: 2px; /* Толщина линии */
+  inline-size: 100%; /* Длина линии */
+  background-color: currentColor;
+  transform-origin: 0 0; /* Смещает точку отсчета трансформации из центра к старту осей */
+  transform: scaleX(0); /* Будет изменяться при фокусировке */
+}
+
+/* Появление линии для подчеркивания кнопки переключения темы */
+.theme-menu__button:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Анимированная стрелка активной кнопки переключения темы */
+.theme-menu__button:disabled::before {
+  /* Позиционируется относительно родителя */
+  position: absolute;
+  inset-inline-start: 0;
+  content: '▶';
+  color: currentColor;
+  animation: active-element 0.5s ease-in-out infinite alternate;
+}
+
+.article-list__item:not(:last-child) {
+  margin-block-end: 50px;
+}
+/* 
+  Cards
+*/
+
+/* Общие стили для карточек */
+.card {
+  background-color: var(--color-background_color);
+  border: solid 2px var(--color-accent_color);
+}
+
+/* Заголовки карточек */
+.card__heading {
+  padding: 5px 10px;
+  font-size: 18px;
+  font-variation-settings: 'wght' var(--font-weight-heading);
+}
+
+/* Текст в карточках */
+.card__paragraph {
+  padding: 0 25px; /* Отступ по бокам */
+  font-size: 18px;
+  line-height: 21px;
+  margin-block-end: 25px;
+}
+
+/* 
+  Cards – image
+*/
+
+/* Обертка изображения карточки используется для позиционирования ватемарки */
+.card__image-wrapper {
+  position: relative;
+}
+
+/* Картинка в карточке */
+.card__image {
+  inline-size: 100%;
+  aspect-ratio: 1/1; /* Все картинки будут квадратными */
+  /* Обрезаем по центру */
+  object-fit: cover;
+  object-position: center;
+  /* Сверху и снизу рамка */
+  border-block: solid 2px var(--color-accent_color);
+  margin-block-end: 25px; /* Отступ от картинки */
+}
+
+/* Ватемарка на изображении карточки */
+.card__image-label {
+  position: absolute;
+  /* Местоположение высчитывается от верхнего правого края в зависимости от размера экрана,
+  в формуле подразумевается, что 1rem = 16px */
+  inset-block-start: clamp(1.375rem, 1.3088rem + 0.2824vw, 1.563rem);
+  inset-inline-end: clamp(0.75rem, 0.4637rem + 1.2214vw, 1.563rem);
+  font-family: var(--font-accent);
+  font-size: 14px;
+  color: var(--color-accent_color);
+  mix-blend-mode: hard-light;
+  text-transform: uppercase;
+  /* По умолчанию для браузеров, которые не поддерживают свойство text-stroke, 
+  обводка текста задается тенью: */
+  text-shadow: -0 -1px 0 var(--color-background_color),
+    0 -1px 0 var(--color-background_color),
+    -0 1px 0 var(--color-background_color),
+    0 1px 0 var(--color-background_color),
+    -1px -0 0 var(--color-background_color),
+    1px -0 0 var(--color-background_color),
+    -1px 0 0 var(--color-background_color),
+    1px 0 0 var(--color-background_color),
+    -1px -1px 0 var(--color-background_color),
+    1px -1px 0 var(--color-background_color),
+    -1px 1px 0 var(--color-background_color),
+    1px 1px 0 var(--color-background_color),
+    -1px -1px 0 var(--color-background_color),
+    1px -1px 0 var(--color-background_color),
+    -1px 1px 0 var(--color-background_color),
+    1px 1px 0 var(--color-background_color);
+}
+
+/* Если браузер поддерживает свойство обводки для текста */
+@supports (
+  (text-stroke: 1px var(--color-background_color)) or
+    (-webkit-text-stroke: 1px var(--color-background_color))
+) {
+  .card__image-label {
+    text-shadow: none; /* Отключаем обводку с помощью тени */
+    /* Используем новые свойства */
+    -webkit-text-stroke: 1px var(--color-background_color);
+    text-stroke: 1px var(--color-background_color);
+    /* Обводка нужна снаружи, поэтому меняем порядок отрисовки */
+    paint-order: stroke fill; /* По факту пока работает только в Сафари */
+  }
+}
+
+/* Фильтры изображений */
+
+.press_start {
+  filter: contrast(2);
+}
+
+.nub {
+  filter: brightness(120%);
+}
+
+.calm_down {
+  filter: sepia(1);
+}
+
+.way {
+  filter: grayscale(0.5);
+}
+
+.chat {
+  filter: saturate(180%);
+}
+
+.work {
+  filter: hue-rotate(-30deg);
+}
+
+.calmness {
+  filter: saturate(180%) brightness(80%);
+}
+
+.appreciate {
+  filter: invert(1) brightness(200%) saturate(60%) hue-rotate(90deg);
+}
+
+/* 
+  Cards – footer
+*/
+
+/* Футер карточек */
+.card__footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 7px;
+  padding: 0 25px 24px 0;
+}
+
+/* 
+  Cards – footer – buttons
+  Основные стили явных кнопок см. в файле global.css для класса .button
+*/
+
+/* 
+  Cards – footer – buttons – heart
+*/
+
+/* Начальное состояние всей иконки */
+.like-icon {
+  margin-block-start: 4px;
+  inline-size: 37px;
+}
+
+/* Фокусировка на иконке */
+.card__icon-button:focus-visible .like-icon {
+  outline: solid 2px var(--color-accent_color);
+}
+
+/* Начальное состояние тела и сердцевины */
+.heart .main-body,
+.heart .core {
+  /* начальное состояние для плавности эффектов */
+  fill: transparent;
+}
+
+/* Начальное состояние искр */
+.like-icon .sparks {
+  /* Скрыты полупрозрачностью */
+  opacity: 0; /* Изменяется анимацией после нажатия */
+}
+
+/* Заливка при наведении курсора */
+.card__icon-button:hover .heart .contour,
+.card__icon-button:hover .heart .main-body,
+.card__icon-button:hover .heart .core {
+  fill: var(--color-accent_color);
+}
+
+/* Заливка для активной кнопки и поставленного лайка */
+.card__icon-button:active .heart .core,
+.card__icon-button:active .heart .main-body,
+.is-liked .heart .core,
+.is-liked .heart .main-body,
+.is-liked .heart .contour {
+  fill: var(--color-heart_color);
+}
+
+.is-liked .heart,
+.is-liked .sparks {
+  transform-origin: center;
+}
+
+/* Анимации лайка */
+.is-liked .heart {
+  animation: heartbeat 0.3s ease-in 0.1s 2 alternate forwards;
+}
+
+.is-liked .sparks {
+  animation: appearance 0.3s ease-in 0.3s 2 alternate forwards;
+}
+
+/* Правила задержки анимаций */
+.heart .core {
+  transition-delay: 0.03s;
+}
+
+.card__icon-button:hover .heart .core {
+  transition-delay: 0.05s;
+}
+
+.is-liked .heart .contour {
+  transition-delay: 0.06s;
+}
+
+/* 
+  Footer
+*/
+
+.footer {
+  display: flex;
+  justify-content: center;
+}
+
+/* Стили для кнопок с иконками 
+дополняют глобальные стили явных кнопок 
+см. класс .button в global.css*/
+.button_with_icon {
+  padding: 15px 20px;
+}
+
+/* Лейаут текста кнопки меняется для центрирования иконки */
+.button_with_icon .button__text,
+.alert_message {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/* Иконка в кнопке добавляется как псевдоэлемент */
+.button_with_icon .button__text::before,
+.alert_message::before {
+  display: block;
+  /* Размер иконки адаптивен и рассчитывается от размера экрана */
+  inline-size: var(--size-button_icon_size);
+  block-size: var(--size-button_icon_size);
+  content: '';
+  /* Сама иконка является svg маской, так удобно менять ее цвет */
+  -webkit-mask: url(../svg/floppy.svg) no-repeat;
+  mask: url(../svg/floppy.svg) no-repeat;
+  -webkit-mask-size: cover;
+  mask-size: cover;
+  /* Цвет наследуется */
+  background-color: currentColor;
+  /* Отступ от текста */
+  margin-inline-end: 8px;
+}
+
+/* 
+  Модальное окно
+*/
+
+/* Открытое модальное окно */
+dialog[open] {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 30px;
+  padding: 30px;
+  opacity: 1;
+  inline-size: clamp(21.313rem, 20.9609rem + 1.5023vw, 22.313rem);
+  block-size: 195px;
+}
+
+/* Закрытое модальное окно */
+dialog {
+  color: var(--color-accent_color);
+  background-color: var(--color-background_color);
+  opacity: 0;
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+/* Перекрытие */
+dialog::backdrop {
+  background-color: black;
+  opacity: 0.6;
+}
+
+.alert_message {
+  font-family: var(--font-accent);
+  font-size: 14px;
+  line-height: 150%; /* 21px */
+  text-transform: uppercase;
+}
+
+.alert_message::before {
+  block-size: 40px;
+  inline-size: 60px;
+  margin-inline-end: 19px;
+}
+
+/* Медиазапросы */
+
+@media (width <= 375px) {
+  .button_with_icon .button__text {
+    flex-direction: column;
+    gap: 10px;
+  }
 }

@@ -24,22 +24,109 @@ ol,
 li {
   margin: 0;
   padding: 0;
+  font-weight: normal;
 }
 
 a {
   color: inherit;
 }
 
-button,
-input {
-  color: currentColor;
-  font-family: inherit;
-  font-size: inherit;
-}
-
 ul,
 ol {
   list-style: none;
+}
+
+/* 
+  Все кнопки
+*/
+
+button,
+input {
+  position: relative; /* Для позиционирования псевдоэлементов */
+  cursor: pointer;
+  color: currentColor;
+  font-family: inherit;
+  font-size: inherit;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
+button:focus {
+  outline: none;
+}
+
+/* 
+  Явные кнопки
+*/
+
+.button {
+  font-family: var(--font-accent);
+  font-size: 14px;
+  padding: 10px 35px;
+  background-color: var(--color-background_color);
+  border: solid 2px var(--color-accent_color);
+}
+
+.button:focus-visible {
+  box-shadow: 2px 2px var(--color-accent_color);
+}
+
+/* Заготовка для заливки кнопок */
+.button::before {
+  position: absolute;
+  content: '';
+  inset: 0; /* Прилипает границами ко всем краям родителя  */
+  inline-size: 100%; /* Ширина */
+  block-size: 100%; /* Высота */
+  background-color: var(--color-accent_color); /* Цвет заливки */
+  transform-origin: 0 0; /* Смещает точку отсчета трансформации из центра к старту осей */
+  transform: scaleX(0); /* Будет изменяться при фокусировке */
+  /* Продолжительность и стиль трансформации */
+  -webkit-transition: ease-in-out 0.5s;
+  -o-transition: ease-in-out 0.5s;
+  transition: ease-in-out 0.5s;
+}
+
+/* Режим отображения текста на кнопке для плавной заливки */
+.button__text,
+.button__icon {
+  color: var(--color-text_button_color);
+  mix-blend-mode: difference; /* Перекрашивает в противоположный заливке цвет */
+}
+
+/* Заливка кнопки при наведении курсора */
+.button:hover::before {
+  transform: scaleX(1);
+}
+
+/* 
+  Полупрозрачность и переходы
+*/
+
+/* Полупрозрачность */
+.theme-menu__button:hover,
+.theme-menu__button:disabled,
+.theme-menu__button:focus,
+.card__image-label {
+  opacity: 0.6;
+}
+
+.theme-menu__button,
+.theme-menu__button::after {
+  -webkit-transition: ease 0.3s;
+  -o-transition: ease 0.3s;
+  transition: ease 0.3s;
+}
+
+.heart .core,
+.card__icon-button:hover .heart .core,
+.heart .main-body,
+.card__icon-button:hover .heart .core,
+.is-liked .heart .contour {
+  -webkit-transition: linear 0.3s;
+  -o-transition: linear 0.3s;
+  transition: linear 0.3s;
 }
 
 .visually-hidden {
