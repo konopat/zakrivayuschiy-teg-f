@@ -435,4 +435,7 @@
   .button_with_icon .button__text::before {
     margin: 0;
   }
+  .dialog__message::before {
+    block-size: 38px;
+  }
 }
