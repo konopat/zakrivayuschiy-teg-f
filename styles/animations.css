@@ -13,6 +13,95 @@
 Кроме этого, не меняйте HTML переключателя тем. Его разметка также гарантирует работу своего скрипта.
 */
 
+.heart .core,
+.heart .main-body,
+.card__icon-button:hover .heart .core,
+.is-liked .heart .contour {
+  -webkit-transition: linear 0.3s;
+  -o-transition: linear 0.3s;
+  transition: linear 0.3s;
+}
+
+/* Правила задержки анимаций */
+
+.is-liked .heart .contour {
+  transition-delay: 0.06s;
+}
+
+.heart .core {
+  transition-delay: 0.03s;
+}
+
+.card__icon-button:hover .heart .core {
+  transition-delay: 0.05s;
+}
+
+.theme-menu__button,
+.theme-menu__button::after,
+.card__icon-button:focus-visible .like-icon {
+  -webkit-transition: ease 0.3s;
+  -o-transition: ease 0.3s;
+  transition: ease 0.3s;
+}
+
+/* 
+  Cards – footer – buttons – heart
+*/
+
+/* Начальное состояние всей иконки */
+.like-icon {
+  margin-block-start: 4px;
+  inline-size: 37px;
+}
+
+/* Фокусировка на иконке */
+.card__icon-button:focus-visible .like-icon {
+  outline: solid 2px var(--color-accent_color);
+}
+
+/* Начальное состояние тела и сердцевины */
+.heart .main-body,
+.heart .core {
+  /* начальное состояние для плавности эффектов */
+  fill: transparent;
+}
+
+/* Начальное состояние искр */
+.like-icon .sparks {
+  /* Скрыты полупрозрачностью */
+  opacity: 0; /* Изменяется анимацией после нажатия */
+}
+
+/* Заливка при наведении курсора */
+.card__icon-button:hover .heart .contour,
+.card__icon-button:hover .heart .main-body,
+.card__icon-button:hover .heart .core {
+  fill: var(--color-accent_color);
+}
+
+/* Заливка для активной кнопки и поставленного лайка */
+.card__icon-button:active .heart .core,
+.card__icon-button:active .heart .main-body,
+.is-liked .heart .core,
+.is-liked .heart .main-body,
+.is-liked .heart .contour {
+  fill: var(--color-heart_color);
+}
+
+.is-liked .heart,
+.is-liked .sparks {
+  transform-origin: center;
+}
+
+/* Анимации лайка */
+.is-liked .heart {
+  animation: heartbeat 0.3s ease-in 0.1s 2 alternate forwards;
+}
+
+.is-liked .sparks {
+  animation: appearance 0.3s ease-in 0.3s 2 alternate forwards;
+}
+
 /* Стрелка активной кнопки выбора темы */
 @keyframes active-element {
   /* Меняется положение по оси X */

@@ -16,7 +16,11 @@
 
 /* Этот класс задает ширину контента */
 .canvas {
-  inline-size: var(--size-content_inline);
+  /* При невозможности вместить во вьюпорт 700px, берется 100% от родителя 
+  (раньше брал 100vw, но на винде добавлялся скролл) */
+  inline-size: var(--size-content_inline); /* clamp(320px, 700px, 100%); */
+  /* 100% по ширине блок прилипает к краю на широких экранах */
+  margin-inline: auto; /* Поэтому добавляем автоматические отступы */
 }
 
 /* Лейаут страницы  */
@@ -42,6 +46,10 @@
 }
 
 .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
   /* Отступы между основным контентом и шапкой с подвалом */
   margin-block-start: 102px;
   margin-block-end: 54px;
@@ -58,7 +66,7 @@
   align-items: center;
   justify-content: flex-end;
   /* Адаптивная высота */
-  block-size: clamp(20.188rem, 19.2859rem + 3.849vw, 22.75rem);
+  min-block-size: clamp(20.188rem, 19.2859rem + 3.849vw, 22.75rem);
   /* Отступ между элементами */
   gap: 22px;
   /* Отступ снизу */
@@ -160,6 +168,13 @@
   margin-block-end: 25px;
 }
 
+.card__paragraph:last-child {
+  padding-inline-end: 0;
+  /* Честно говоря, я не понял для чего это нужно.
+  Поэтому не факт, что сделал правильно)) Визуально ничего не изменилось
+  В макете у всех параграфов отступы по бокам одинаковые вроде... */
+}
+
 /* 
   Cards – image
 */
@@ -230,35 +245,35 @@
 
 /* Фильтры изображений */
 
-.press_start {
+.filter-contrast {
   filter: contrast(2);
 }
 
-.nub {
+.filter-brightness {
   filter: brightness(120%);
 }
 
-.calm_down {
+.filter-sepia {
   filter: sepia(1);
 }
 
-.way {
+.filter-grayscale {
   filter: grayscale(0.5);
 }
 
-.chat {
+.filter-saturate {
   filter: saturate(180%);
 }
 
-.work {
+.filter-hue_rotate {
   filter: hue-rotate(-30deg);
 }
 
-.calmness {
+.filter-saturate_brightness {
   filter: saturate(180%) brightness(80%);
 }
 
-.appreciate {
+.filter-hard {
   filter: invert(1) brightness(200%) saturate(60%) hue-rotate(90deg);
 }
 
@@ -276,96 +291,15 @@
   padding: 0 25px 24px 0;
 }
 
-/* 
-  Cards – footer – buttons
-  Основные стили явных кнопок см. в файле global.css для класса .button
-*/
-
-/* 
-  Cards – footer – buttons – heart
-*/
-
-/* Начальное состояние всей иконки */
-.like-icon {
-  margin-block-start: 4px;
-  inline-size: 37px;
+/* Кнопка без иконки */
+.card__like-button {
+  padding-block: 10px;
 }
 
-/* Фокусировка на иконке */
-.card__icon-button:focus-visible .like-icon {
-  outline: solid 2px var(--color-accent_color);
-}
-
-/* Начальное состояние тела и сердцевины */
-.heart .main-body,
-.heart .core {
-  /* начальное состояние для плавности эффектов */
-  fill: transparent;
-}
-
-/* Начальное состояние искр */
-.like-icon .sparks {
-  /* Скрыты полупрозрачностью */
-  opacity: 0; /* Изменяется анимацией после нажатия */
-}
-
-/* Заливка при наведении курсора */
-.card__icon-button:hover .heart .contour,
-.card__icon-button:hover .heart .main-body,
-.card__icon-button:hover .heart .core {
-  fill: var(--color-accent_color);
-}
-
-/* Заливка для активной кнопки и поставленного лайка */
-.card__icon-button:active .heart .core,
-.card__icon-button:active .heart .main-body,
-.is-liked .heart .core,
-.is-liked .heart .main-body,
-.is-liked .heart .contour {
-  fill: var(--color-heart_color);
-}
-
-.is-liked .heart,
-.is-liked .sparks {
-  transform-origin: center;
-}
-
-/* Анимации лайка */
-.is-liked .heart {
-  animation: heartbeat 0.3s ease-in 0.1s 2 alternate forwards;
-}
-
-.is-liked .sparks {
-  animation: appearance 0.3s ease-in 0.3s 2 alternate forwards;
-}
-
-/* Правила задержки анимаций */
-.heart .core {
-  transition-delay: 0.03s;
-}
-
-.card__icon-button:hover .heart .core {
-  transition-delay: 0.05s;
-}
-
-.is-liked .heart .contour {
-  transition-delay: 0.06s;
-}
-
-/* 
-  Footer
-*/
-
-.footer {
-  display: flex;
-  justify-content: center;
-}
-
-/* Стили для кнопок с иконками 
-дополняют глобальные стили явных кнопок 
-см. класс .button в global.css*/
+/* Стили для кнопок с иконками */
 .button_with_icon {
-  padding: 15px 20px;
+  padding-block: 15px;
+  inline-size: clamp(19.125rem, 18.4866rem + 2.7238vw, 20.938rem);
 }
 
 /* Лейаут текста кнопки меняется для центрирования иконки */
@@ -374,11 +308,12 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
 }
 
 /* Иконка в кнопке добавляется как псевдоэлемент */
 .button_with_icon .button__text::before,
-.alert_message::before {
+.dialog__message::before {
   display: block;
   /* Размер иконки адаптивен и рассчитывается от размера экрана */
   inline-size: var(--size-button_icon_size);
@@ -396,47 +331,99 @@
 }
 
 /* 
-  Модальное окно
+  Явные кнопки
 */
 
-/* Открытое модальное окно */
-dialog[open] {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 30px;
-  padding: 30px;
-  opacity: 1;
-  inline-size: clamp(21.313rem, 20.9609rem + 1.5023vw, 22.313rem);
-  block-size: 195px;
-}
-
-/* Закрытое модальное окно */
-dialog {
-  color: var(--color-accent_color);
+.button {
+  font-family: var(--font-accent);
+  font-size: 14px;
+  min-inline-size: 130px;
   background-color: var(--color-background_color);
-  opacity: 0;
-  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  border: solid 2px var(--color-accent_color);
 }
 
-/* Перекрытие */
-dialog::backdrop {
-  background-color: black;
+.button:focus-visible {
+  box-shadow: 2px 2px var(--color-accent_color);
+}
+
+/* Заготовка для заливки кнопок */
+.button::before {
+  position: absolute;
+  content: '';
+  inset: 0; /* Прилипает границами ко всем краям родителя  */
+  inline-size: 100%; /* Ширина */
+  block-size: 100%; /* Высота */
+  background-color: var(--color-accent_color); /* Цвет заливки */
+  transform-origin: 0 0; /* Смещает точку отсчета трансформации из центра к старту осей */
+  transform: scaleX(0); /* Будет изменяться при фокусировке */
+  /* Продолжительность и стиль трансформации */
+  -webkit-transition: ease-in-out 0.5s;
+  -o-transition: ease-in-out 0.5s;
+  transition: ease-in-out 0.5s;
+}
+
+/* Режим отображения текста на кнопке для плавной заливки */
+.button__text,
+.button__icon {
+  color: var(--color-text_button_color);
+  mix-blend-mode: difference; /* Перекрашивает в противоположный заливке цвет */
+}
+
+/* Заливка кнопки при наведении курсора */
+.button:hover::before {
+  transform: scaleX(1);
+}
+
+/* Полупрозрачность */
+.theme-menu__button:hover,
+.theme-menu__button:disabled,
+.theme-menu__button:focus,
+.card__image-label {
   opacity: 0.6;
 }
 
-.alert_message {
+/* 
+  Модальное окно
+*/
+
+.dialog[open] {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: var(--color-accent_color);
+  background-color: var(--color-background_color);
+  padding: 30px;
+  max-inline-size: clamp(21.313rem, 20.9609rem + 1.5023vw, 22.313rem);
+  block-size: 195px;
+}
+
+/* Перекрытие */
+.dialog::backdrop {
+  background-color: black;
+  opacity: 0.75;
+}
+
+.dialog__message {
+  display: flex;
+  align-items: center;
   font-family: var(--font-accent);
   font-size: 14px;
   line-height: 150%; /* 21px */
   text-transform: uppercase;
 }
 
-.alert_message::before {
+.dialog__message::before {
   block-size: 40px;
   inline-size: 60px;
   margin-inline-end: 19px;
 }
+
+.dialog__button {
+  inline-size: 100%;
+  padding-block: 10px;
+}
+
+/* Открытое модальное окно */
 
 /* Медиазапросы */
 
@@ -444,5 +431,8 @@ dialog::backdrop {
   .button_with_icon .button__text {
     flex-direction: column;
     gap: 10px;
+  }
+  .button_with_icon .button__text::before {
+    margin: 0;
   }
 }
