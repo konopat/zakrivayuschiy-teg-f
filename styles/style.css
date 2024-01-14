@@ -28,7 +28,8 @@
   /* Грид в одну колонку с центральным позиционированием */
   display: grid;
   justify-content: center;
-  padding: 102px 0; /* Отступы сверху и снизу страницы */
+  /* Отступы сверху страницы постоянный, снизу адаптивный */
+  padding: 102px 0 clamp(6.375rem, 6.3088rem + 0.2824vw, 6.563rem) 0;
   /* Предустановленные стили задают минимальные размеры блоков */
   min-inline-size: 320px;
   min-block-size: 100dvb; /* В контексте гридов 
@@ -52,7 +53,6 @@
   gap: 50px;
   /* Отступы между основным контентом и шапкой с подвалом */
   margin-block-start: 102px;
-  margin-block-end: 54px;
 }
 
 /* 
@@ -135,6 +135,7 @@
   /* Позиционируется относительно родителя */
   position: absolute;
   inset-inline-start: 0;
+  inset-block-end: 0;
   content: '▶';
   color: currentColor;
   animation: active-element 0.5s ease-in-out infinite alternate;
@@ -165,14 +166,14 @@
   padding: 0 25px; /* Отступ по бокам */
   font-size: 18px;
   line-height: 21px;
-  margin-block-end: 25px;
 }
 
-.card__paragraph:last-child {
-  padding-inline-end: 0;
-  /* Честно говоря, я не понял для чего это нужно.
-  Поэтому не факт, что сделал правильно)) Визуально ничего не изменилось
-  В макете у всех параграфов отступы по бокам одинаковые вроде... */
+/* Параграфы в карточках */
+/* :last-child ведет себя как-то не очевидно без дополнительных враперов в html,
+поэтому я использовал :last-of-type */
+p.card__paragraph:not(:last-of-type) {
+  margin-block-end: 25px;
+  /* В данном случае отступ снизу добавляется всем параграфам, кроме последнего */
 }
 
 /* 
@@ -288,7 +289,7 @@
   justify-content: flex-end;
   align-items: center;
   gap: 7px;
-  padding: 0 25px 24px 0;
+  padding: 25px;
 }
 
 /* Кнопка без иконки */
@@ -394,7 +395,7 @@
   background-color: var(--color-background_color);
   padding: 30px;
   max-inline-size: clamp(21.313rem, 20.9609rem + 1.5023vw, 22.313rem);
-  block-size: 195px;
+  min-block-size: 195px;
 }
 
 /* Перекрытие */
