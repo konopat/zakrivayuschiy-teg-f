@@ -428,7 +428,7 @@ p.card__paragraph:not(:last-of-type) {
 
 /* Медиазапросы */
 
-@media (width <= 375px) {
+@media (width <= 700px) {
   .button_with_icon .button__text {
     flex-direction: column;
     gap: 10px;
